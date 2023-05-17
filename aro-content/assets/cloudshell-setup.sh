@@ -34,17 +34,17 @@ if ! which tkn > /dev/null; then
   install tkn ~/bin
 fi
 
-echo "Installing Siege"
-if ! which siege > /dev/null; then
-  echo "Compiling Siege, this may take a few minutes..."
-  curl -Ls http://download.joedog.org/siege/siege-4.1.5.tar.gz | tar xzf -
-  cd siege-4.1.5
-  ./configure --prefix=${HOME} --with-ssl
-  make > /dev/null
-  make install > /dev/null
-  mkdir -p ~/.siege
-  siege.config > /dev/null
-fi
+#echo "Installing Siege"
+#if ! which siege > /dev/null; then
+#  echo "Compiling Siege, this may take a few minutes..."
+#  curl -Ls http://download.joedog.org/siege/siege-4.1.5.tar.gz | tar xzf -
+#  cd siege-4.1.5
+#  ./configure --prefix=${HOME} --with-ssl
+#  make > /dev/null
+#  make install > /dev/null
+#  mkdir -p ~/.siege
+#  siege.config > /dev/null
+#fi
 
 echo "Configuring Environment specific variables"
 cat <<"EOF" > ~/.workshoprc
@@ -52,9 +52,13 @@ cat <<"EOF" > ~/.workshoprc
 # source ~/bin/oc_bash_completion
 export AZ_USER=$(az ad signed-in-user show --query "userPrincipalName" -o tsv | cut -d @ -f1)
 export USERID="${AZ_USER}"
-export AZ_RG="${AZ_USER}-rg"
-export AZ_ARO="${AZ_USER}-cluster"
+#export AZ_RG="${AZ_USER}-rg"
+#export AZ_ARO="${AZ_USER}-cluster"
 export AZ_LOCATION='eastus'
+export OCP_PASS=$(az aro list-credentials --name "${AZ_ARO}" --resource-group "${AZ_RG}" --query="kubeadminPassword" -o tsv)
+export OCP_USER=kubeadmin
+export OCP_CONSOLE="$(az aro show --name ${AZ_ARO} --resource-group ${AZ_RG} -o tsv --query consoleProfile)"
+export OCP_API="$(az aro show --name ${AZ_ARO} --resource-group ${AZ_RG} --query apiserverProfile.url -o tsv)"
 
 alias kubectl=oc
 alias k=oc
@@ -62,6 +66,8 @@ EOF
 
 export UNIQUE=$RANDOM
 echo "export UNIQUE=${UNIQUE}" >> ~/.workshoprc
+echo "export AZ_RG=`echo $RESOURCEGROUP`" >> ~/.workshoprc
+echo "export AZ_ARO=aro-cluster-$GUID" >> ~/.workshoprc
 
 # echo "source ~/.workshoprc" >> ~/.bashrc
 
