@@ -34,6 +34,18 @@ if ! which tkn > /dev/null; then
   install tkn ~/bin
 fi
 
+echo "Installing Helm"
+
+wget https://get.helm.sh/helm-v3.9.3-linux-amd64.tar.gz >/dev/null
+tar xvf helm-v3.9.3-linux-amd64.tar.gz > /dev/null
+sudo cp linux-amd64/helm /usr/local/bin 
+
+echo "Installing Maven"
+wget https://mirrors.estointernet.in/apache/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz
+tar -xvf apache-maven-3.6.3-bin.tar.gz > /dev/null
+sudo cp apache-maven-3.6.3 /opt/ 
+
+
 #echo "Installing Siege"
 #if ! which siege > /dev/null; then
 #  echo "Compiling Siege, this may take a few minutes..."
@@ -59,15 +71,19 @@ export OCP_PASS=$(az aro list-credentials --name "${AZ_ARO}" --resource-group "$
 export OCP_USER=kubeadmin
 export OCP_CONSOLE="$(az aro show --name ${AZ_ARO} --resource-group ${AZ_RG} -o tsv --query consoleProfile)"
 export OCP_API="$(az aro show --name ${AZ_ARO} --resource-group ${AZ_RG} --query apiserverProfile.url -o tsv)"
+export M2_HOME="/opt/apache-maven-3.6.3"
 
 alias kubectl=oc
 alias k=oc
+
 EOF
 
 export UNIQUE=$RANDOM
 echo "export UNIQUE=${UNIQUE}" >> ~/.workshoprc
+echo "export AZR_STORAGE_ACCOUNT_NAME=openenvadmin${UNIQUE}" >> ~/.workshoprc
 echo "export AZ_RG=`echo $RESOURCEGROUP`" >> ~/.workshoprc
 echo "export AZ_ARO=aro-cluster-$GUID" >> ~/.workshoprc
+echo "export PATH=$PATH:$M2_HOME/bin" >> ~/.workshoprc
 
 # echo "source ~/.workshoprc" >> ~/.bashrc
 
