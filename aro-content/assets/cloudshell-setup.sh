@@ -79,6 +79,7 @@ alias k=oc
 EOF
 
 export UNIQUE=$RANDOM
+export M2_HOME="/opt/apache-maven-3.6.3"
 echo "export UNIQUE=${UNIQUE}" >> ~/.workshoprc
 echo "export AZR_STORAGE_ACCOUNT_NAME=openenvadmin${UNIQUE}" >> ~/.workshoprc
 echo "export AZ_RG=`echo $RESOURCEGROUP`" >> ~/.workshoprc
