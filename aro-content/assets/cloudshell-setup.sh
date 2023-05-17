@@ -43,7 +43,7 @@ sudo cp linux-amd64/helm /usr/local/bin
 echo "Installing Maven"
 wget https://mirrors.estointernet.in/apache/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz
 tar -xvf apache-maven-3.6.3-bin.tar.gz > /dev/null
-sudo cp apache-maven-3.6.3 /opt/ 
+sudo cp -r apache-maven-3.6.3 /opt/ 
 
 
 #echo "Installing Siege"
@@ -83,7 +83,7 @@ echo "export UNIQUE=${UNIQUE}" >> ~/.workshoprc
 echo "export AZR_STORAGE_ACCOUNT_NAME=openenvadmin${UNIQUE}" >> ~/.workshoprc
 echo "export AZ_RG=`echo $RESOURCEGROUP`" >> ~/.workshoprc
 echo "export AZ_ARO=aro-cluster-$GUID" >> ~/.workshoprc
-echo "export PATH=$PATH:$M2_HOME/bin" >> ~/.workshoprc
+echo "export PATH="$M2_HOME/bin:$PATH"" >> ~/.workshoprc
 
 # echo "source ~/.workshoprc" >> ~/.bashrc
 
